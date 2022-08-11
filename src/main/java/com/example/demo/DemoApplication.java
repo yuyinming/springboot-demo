@@ -15,6 +15,8 @@ import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerF
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -89,4 +91,15 @@ public class DemoApplication {
 		log.info("res :{}", res);
 		return res;
 	}
+
+	@RequestMapping("/greeting/latency/{seconds}")
+	public Greeting greeting(@PathVariable long seconds) {
+		log.info("/greeting/latency/ {} seconds", seconds);
+		try {
+			Thread.sleep(seconds * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Greeting greeting = new Greeting(counter.incrementAndGet(), "Hello World!");
+		return greeting; }
 }
